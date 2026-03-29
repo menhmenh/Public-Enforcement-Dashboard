@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: #ffffff;
+  color: #001f3f;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+  line-height: 1.6;
+}
+
+/* Utility classes */
+.text-balance {
+  text-wrap: balance;
+}
