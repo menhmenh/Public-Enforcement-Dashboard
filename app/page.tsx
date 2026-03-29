@@ -85,15 +85,15 @@ export default function Home() {
         {/* CTA Section */}
         <section className="py-16 bg-navy text-white">
           <div className="max-w-7xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-6">View the Full Dashboard</h2>
+            <h2 className="text-3xl font-bold mb-6">Explore the Full Analysis</h2>
             <p className="text-lg text-teal-light mb-8 max-w-2xl mx-auto">
-              Explore interactive visualizations, apply filters by jurisdiction and year, and dive into detailed insights.
+              Select a chapter to explore interactive visualizations, apply filters by jurisdiction and year, and dive into detailed insights.
             </p>
             <Link 
               href="/dashboard" 
               className="inline-block bg-teal hover:bg-teal-light text-navy font-bold py-3 px-8 rounded transition"
             >
-              Go to Dashboard
+              Open Dashboard
             </Link>
           </div>
         </section>
