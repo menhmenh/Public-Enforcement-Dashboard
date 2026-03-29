@@ -1,8 +1,12 @@
+'use client'
+
+import { useState } from 'react'
 import Header from '@/components/Header'
 import PageHeader from '@/components/PageHeader'
 import FilterBar from '@/components/FilterBar'
 import InsightCard from '@/components/InsightCard'
 import Footer from '@/components/Footer'
+import StatsCard from '@/components/StatsCard'
 import MockLineChart from '@/components/MockLineChart'
 import MockBarChart from '@/components/MockBarChart'
 
@@ -12,6 +16,21 @@ export const metadata = {
 }
 
 export default function DrinkDrivingDashboard() {
+  const [jurisdictions, setJurisdictions] = useState<string[]>(['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'])
+  const [yearRange, setYearRange] = useState<[number, number]>([2008, 2024])
+  const [locationType, setLocationType] = useState('all')
+
+  const handleFilterChange = (filters: any) => {
+    setJurisdictions(filters.jurisdictions)
+    setYearRange(filters.yearRange)
+  }
+
+  // Mock stat calculations based on filters
+  const totalPositiveTests = 52847
+  const nationalAverageRate = 0.5
+  const highestRateState = 'NT'
+  const rateChange = -0.3
+
   return (
     <>
       <Header />
@@ -22,74 +41,87 @@ export default function DrinkDrivingDashboard() {
       />
       
       <main className="bg-white pt-32 pb-16">
-        <FilterBar />
+        <FilterBar onFilterChange={handleFilterChange} />
 
         <div className="max-w-6xl mx-auto px-6">
-          {/* Chart 1: Breath tests vs positivity rate (full width) */}
-          <section className="mb-8">
-            <div className="bg-white rounded-lg overflow-hidden">
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-navy mb-2">Breath Tests Conducted vs Positivity Rate</h2>
-                <p className="text-grey-dark text-sm mb-6">
-                  X axis: Year (2008–2024). Left Y axis: Total tests conducted. Right Y axis: Percentage of positive results. 
-                  Combined view showing volume of testing against success rate in identifying positive cases.
-                </p>
-                <MockLineChart title="" height={320} />
-              </div>
+          {/* Stat Row */}
+          <section className="mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatsCard 
+                label="Total Positive Breath Tests (selected period)" 
+                value={totalPositiveTests.toLocaleString()}
+                bgColor="teal"
+              />
+              <StatsCard 
+                label="National Average Positivity Rate" 
+                value={nationalAverageRate.toFixed(1)}
+                unit="%"
+                bgColor="teal"
+              />
+              <StatsCard 
+                label="State with Highest Rate" 
+                value={highestRateState}
+                bgColor="navy"
+              />
+              <StatsCard 
+                label="Change vs 5 Years Prior" 
+                value={`${Math.abs(rateChange).toFixed(1)}%`}
+                unit={rateChange < 0 ? '↓' : '↑'}
+                bgColor={rateChange < 0 ? 'navy' : 'navy'}
+              />
             </div>
-            <InsightCard text="Despite increasing test volumes in most states, positivity rates have declined significantly. This reflects improved community compliance with drink-driving laws and better road safety culture across Australia." />
           </section>
 
-          {/* Chart 2: Positivity rate by jurisdiction (full width) */}
+          {/* Chart 1: Positivity rate by state over time (primary chart) */}
           <section className="mb-8">
-            <div className="bg-white rounded-lg overflow-hidden">
+            <div className="bg-white rounded-lg overflow-hidden border border-grey-dark/10">
               <div className="p-8">
-                <h2 className="text-2xl font-bold text-navy mb-2">Positive Results by Jurisdiction</h2>
+                <h2 className="text-2xl font-bold text-navy mb-2">Positivity Rate by State Over Time</h2>
                 <p className="text-grey-dark text-sm mb-6">
-                  Horizontal bar chart comparing positivity rates across all Australian states and territories. 
-                  Data shows that some jurisdictions, particularly the Northern Territory and remote regions, maintain rates significantly above the national average.
+                  X axis: Year (2008–2024). Y axis: Positivity rate (%). 
+                  One line per state/territory with distinct colours. NT highlighted in red. Hover to see state details and year-specific values. 
+                  An annotation at NT's 2023 value highlights it as the highest rate nationally.
                 </p>
-                <MockBarChart title="" height={280} />
+                <MockLineChart title="" height={340} />
               </div>
             </div>
-            <InsightCard text="Northern Territory consistently shows the highest positivity rate — often three to four times the national average. This suggests a need for targeted intervention in remote areas and specific regions with persistent high-risk behaviour." />
+            <InsightCard text="The Northern Territory consistently shows a positivity rate 4–6 times higher than New South Wales and Victoria. Most states have improved since 2008, but the NT trend has not declined at the same rate, suggesting structural differences in enforcement or driver behaviour." />
           </section>
 
-          {/* Charts 3 & 4: Trends and location breakdown (two columns) */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Chart 3: Positivity trends by state */}
-            <section>
-              <div className="bg-white rounded-lg overflow-hidden">
-                <div className="p-8">
-                  <h2 className="text-2xl font-bold text-navy mb-2">Positivity Rate Trends by State</h2>
-                  <p className="text-grey-dark text-sm mb-6">
-                    Multi-line chart showing long-term trends (2008–2024) for each jurisdiction. 
-                    Most states show declining trends, but variations reveal state-specific enforcement and compliance patterns.
-                  </p>
-                  <MockLineChart title="" height={300} />
-                </div>
+          {/* Chart 2: Positive tests vs tests conducted, dual axis */}
+          <section className="mb-8">
+            <div className="bg-white rounded-lg overflow-hidden border border-grey-dark/10">
+              <div className="p-8">
+                <h2 className="text-2xl font-bold text-navy mb-2">Tests Conducted vs Positivity Rate</h2>
+                <p className="text-grey-dark text-sm mb-6">
+                  Combined visualization with bars (left axis, navy) showing total breath tests conducted per year, 
+                  and a teal line (right axis) showing positivity rate percentage. 
+                  A legend inside the chart clearly identifies bars = tests conducted and line = % positive.
+                </p>
+                <MockBarChart title="" height={320} />
               </div>
-              <InsightCard text="Most jurisdictions show declining positivity rates over the 16-year period, indicating a general improvement in drink-driving prevention. However, the divergence between states suggests different enforcement strategies or compliance levels." />
-            </section>
+            </div>
+            <InsightCard text="The number of breath tests conducted fell sharply in 2020–2021 due to COVID-19 restrictions, but the positivity rate rose during the same period, suggesting those who were still driving were more likely to be over the limit." />
+          </section>
 
-            {/* Chart 4: Positivity by location type */}
-            <section>
-              <div className="bg-white rounded-lg overflow-hidden">
-                <div className="p-8">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h2 className="text-2xl font-bold text-navy">Positivity Rate by Location Type</h2>
-                    <span className="text-xs font-bold text-white bg-yellow-500 px-2 py-1 rounded">2023–2024 only</span>
-                  </div>
-                  <p className="text-grey-dark text-sm mb-6">
-                    Comparison of positivity rates across location types (Major Cities, Inner Regional, Outer Regional, Remote, Very Remote). 
-                    Remote areas show higher rates, reflecting different risk profiles.
-                  </p>
-                  <MockBarChart title="" height={300} />
+          {/* Chart 3: Positive tests by location type (2023–2024 only) */}
+          <section className="mb-8">
+            <div className="bg-white rounded-lg overflow-hidden border border-grey-dark/10">
+              <div className="p-8">
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-2xl font-bold text-navy">Positive Tests by Location Type</h2>
+                  <span className="text-xs font-bold text-white bg-yellow-500 px-2 py-1 rounded">2023–2024 only</span>
                 </div>
+                <p className="text-grey-dark text-sm mb-6">
+                  Grouped bar chart showing positive tests across location types (Major Cities, Inner Regional, Outer Regional, Remote, Very Remote). 
+                  Two bars per location type: 2023 (navy), 2024 (teal). 
+                  Rate-per-test annotations above each 2024 bar: "1 in X tested positive".
+                </p>
+                <MockBarChart title="" height={260} />
               </div>
-              <InsightCard text="Remote and very remote areas show positivity rates significantly above major cities. This geographic disparity requires tailored enforcement approaches and community education programs suited to regional contexts." />
-            </section>
-          </div>
+            </div>
+            <InsightCard text="Very Remote areas show a detection rate per test far higher than Major Cities despite lower absolute counts. This means fewer people are being tested in remote areas, but those who are tested are significantly more likely to be over the limit." />
+          </section>
         </div>
       </main>
 
