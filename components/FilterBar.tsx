@@ -10,6 +10,7 @@ export interface FilterState {
   jurisdictions: string[]
   yearRange: [number, number]
   offenceTypes?: string[]
+  substances?: string[]
 }
 
 export default function FilterBar({ onFilterChange }: FilterBarProps) {
