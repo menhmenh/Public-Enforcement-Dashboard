@@ -4,8 +4,8 @@ interface InsightCardProps {
 
 export default function InsightCard({ text }: InsightCardProps) {
   return (
-    <div className="border-l-4 border-yellow-400 bg-yellow-50 p-6 my-6 rounded">
-      <p className="text-sm text-grey-dark leading-relaxed">{text}</p>
+    <div className="my-3 rounded-xl border border-navy/30 bg-[#dfe8f4] p-4 text-navy shadow-sm">
+      <p className="text-[15px] leading-relaxed">{text}</p>
     </div>
   )
 }

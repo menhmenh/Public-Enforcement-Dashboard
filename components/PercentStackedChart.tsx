@@ -8,6 +8,7 @@ interface PercentStackedChartProps {
 }
 
 export default function PercentStackedChart({ title, height = 320 }: PercentStackedChartProps) {
+  void title
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {

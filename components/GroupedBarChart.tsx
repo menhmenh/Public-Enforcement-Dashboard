@@ -8,6 +8,7 @@ interface GroupedBarChartProps {
 }
 
 export default function GroupedBarChart({ title, height = 300 }: GroupedBarChartProps) {
+  void title
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {

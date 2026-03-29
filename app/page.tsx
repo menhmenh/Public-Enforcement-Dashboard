@@ -1,229 +1,187 @@
 import Link from 'next/link'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import StatsCard from '@/components/StatsCard'
 
 export const metadata = {
-  title: 'Road Safety Enforcement in Australia - Public Enforcement Dashboard',
-  description: 'Exploring 16 years of police enforcement data from 2008–2024. An interactive visualisation of fines, drink-driving, and drug detection across all Australian states and territories.',
+  title: 'Road Safety Enforcement in Australia',
+  description:
+    'Exploring 16 years of police enforcement data (2008–2024) across all Australian states and territories.',
 }
 
-export default function Home() {
-  const team = [
-    {
-      name: 'Team Member One',
-      role: 'Data Cleaning & EDA',
-      description: 'Data preparation and exploratory analysis'
-    },
-    {
-      name: 'Team Member Two',
-      role: 'Visualisation & Frontend',
-      description: 'Dashboard design and interactive components'
-    },
-    {
-      name: 'Team Member Three',
-      role: 'Backend & Integration',
-      description: 'Data pipeline and backend architecture'
-    }
-  ]
+const team = [
+  {
+    name: 'Mai Minh Phuong Anh - 104997232',
+  },
+  {
+    name: 'Nguyen Ba Chanh - 104813299',
+  },
+]
 
-  const datasets = [
-    { name: 'Fines & Offences', rows: '312,847', dimensions: 'Year, State, Offence Type, Amount' },
-    { name: 'Drink Driving Tests', rows: '9,359,163', dimensions: 'Year, State, Tests, Positive Rate' },
-    { name: 'Drug Detection', rows: '324,156', dimensions: 'Year, State, Substance Type, Count' }
-  ]
+const datasets = [
+  { name: 'Fines & Offences', rows: '12,179', dimensions: 'Year, State, Offence, Age, Location' },
+  { name: 'Breath Tests', rows: '1,326', dimensions: 'Year, State, Tests, Positive, Rate' },
+  { name: 'Drug Detection', rows: '7,982', dimensions: 'Year, State, Substance, Age, Location' },
+]
 
-  const steps = [
-    {
-      number: 1,
-      title: 'Collected',
-      description: 'Downloaded 4 XLSX files from official BITRE portal. Confirmed 2008–2024 coverage, 8 jurisdictions.'
-    },
-    {
-      number: 2,
-      title: 'Cleaned',
-      description: 'Jupyter notebook (31 cells). Standardised column names, shortened location labels, flagged aggregate rows, converted Yes/No drug columns to boolean, derived positivity rate.'
-    },
-    {
-      number: 3,
-      title: 'Visualised',
-      description: 'React + D3.js interactive dashboard. Three data pages with linked filters, insight callouts, and responsive design.'
-    }
-  ]
+const navigationCards = [
+  {
+    title: 'Fines & Offences',
+    href: '/dashboard/fines',
+    description:
+      'Explore 16 years of speed, mobile phone, seatbelt, and unlicensed driving fines across Australia.',
+  },
+  {
+    title: 'Drink Driving',
+    href: '/dashboard/drink-driving',
+    description:
+      'Compare positive breath test rates across states and see how drink-driving has declined since 2008.',
+  },
+  {
+    title: 'Drug Detection',
+    href: '/dashboard/drug-detection',
+    description:
+      'Discover how substance detection has shifted — from cannabis in 2008 to methylamphetamine today.',
+  },
+]
 
-  const chapters = [
-    {
-      title: 'Fines & Offences',
-      href: '/dashboard/fines',
-      description: 'Explore 16 years of speed, mobile phone, seatbelt, and unlicensed driving fines across Australia.'
-    },
-    {
-      title: 'Drink Driving',
-      href: '/dashboard/drink-driving',
-      description: 'Compare positive breath test rates across states and see how drink-driving has declined since 2008.'
-    },
-    {
-      title: 'Drug Detection',
-      href: '/dashboard/drug-detection',
-      description: 'Discover how substance detection has shifted — from cannabis in 2008 to methylamphetamine today.'
-    }
-  ]
+const steps = [
+  {
+    step: '1',
+    title: 'Collected',
+    text: 'Downloaded four XLSX files from the BITRE portal and verified 2008–2024 coverage across all jurisdictions.',
+  },
+  {
+    step: '2',
+    title: 'Cleaned',
+    text: 'Standardised names, normalised categorical labels, converted columns, and derived positivity measures in Jupyter.',
+  },
+  {
+    step: '3',
+    title: 'Visualised',
+    text: 'Built a React + D3 dashboard with linked page filters, annotations, and responsive chart layouts.',
+  },
+]
 
+export default function HomePage() {
   return (
-    <main className="bg-navy">
-      {/* Section A: Hero Banner */}
-      <section className="relative overflow-hidden py-20" style={{
-        background: 'linear-gradient(to right, #0D2B55, #0F3460)'
-      }}>
-        <div className="max-w-6xl mx-auto px-6 text-center text-white">
-          <h1 className="text-5xl font-bold mb-4">Road Safety Enforcement in Australia</h1>
-          <p className="text-xl italic text-teal-light mb-6">
-            Exploring 16 years of police enforcement data · 2008–2024
-          </p>
-          <p className="text-base text-grey-dark mb-12 max-w-2xl mx-auto">
-            An interactive visualisation of fines, drink-driving, and drug detection across all Australian states and territories.
-          </p>
-          
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-navy-light bg-opacity-60 rounded p-6">
-              <p className="text-4xl font-bold text-teal mb-2">12,179</p>
-              <p className="text-grey-dark text-sm">Total Rows in Dataset</p>
-            </div>
-            <div className="bg-navy-light bg-opacity-60 rounded p-6">
-              <p className="text-4xl font-bold text-teal mb-2">16</p>
-              <p className="text-grey-dark text-sm">Years Covered</p>
-            </div>
-            <div className="bg-navy-light bg-opacity-60 rounded p-6">
-              <p className="text-4xl font-bold text-teal mb-2">8</p>
-              <p className="text-grey-dark text-sm">States & Territories</p>
+    <>
+      <Header />
+      <main className="pb-10 pt-16">
+        <section className="fade-in border-b border-border bg-gradient-to-br from-slate-50 to-white py-20">
+          <div className="content-wrap text-center">
+            <h1 className="font-display text-4xl font-bold text-navy md:text-5xl">
+              Road Safety Enforcement in Australia
+            </h1>
+            <p className="mt-3 text-xl italic text-teal">
+              Exploring 16 years of police enforcement data · 2008–2024
+            </p>
+            <p className="mx-auto mt-5 max-w-3xl text-base text-slate-600">
+              An interactive visualisation of fines, drink-driving, and drug detection across all Australian states and territories.
+            </p>
+
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              <StatsCard label="Total Rows in Dataset" value="22,017" bgColor="surface" align="center" />
+              <StatsCard label="Years Covered" value="16" bgColor="surface" align="center" />
+              <StatsCard label="States & Territories" value="8" bgColor="surface" align="center" />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section B: Team */}
-      <section className="bg-navy text-white py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-teal mb-12 text-center">Our Team</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, idx) => (
-              <div key={idx} className="bg-navy-light bg-opacity-60 rounded p-6">
-                <h3 className="text-xl font-bold text-white mb-2">{member.name}</h3>
-                <p className="text-teal-light text-sm font-semibold mb-2">{member.role}</p>
-                <p className="text-grey-dark text-sm">{member.description}</p>
+        <section className="fade-in py-14">
+          <div className="content-wrap">
+            <h2 className="mb-6 text-center font-display text-3xl font-bold text-navy">Our Team</h2>
+            <div className="grid gap-5 md:grid-cols-2">
+              {team.map((member) => (
+                <article key={member.name} className="surface-panel p-5">
+                  <h3 className="font-display text-xl font-bold text-navy">{member.name}</h3>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="fade-in py-14">
+          <div className="content-wrap">
+            <h2 className="mb-6 font-display text-3xl font-bold text-navy">About the Data</h2>
+            <div className="grid gap-6 lg:grid-cols-5">
+              <div className="space-y-4 lg:col-span-3">
+                <p className="text-slate-600">
+                  This project uses official BITRE road enforcement data covering every Australian state and territory from 2008 through 2024.
+                </p>
+                <p className="text-slate-600">
+                  The 2023 update introduced age-group and location-type detail, making it possible to move beyond national totals into more specific demographic and geographic patterns.
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section C: Dataset */}
-      <section className="bg-navy text-white py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-white mb-12">About the Data</h2>
-          <div className="grid grid-cols-3 gap-8 mb-12">
-            <div className="col-span-2">
-              <p className="text-grey-dark leading-relaxed mb-6">
-                This project analysed aggregated public data from the Bureau of Infrastructure and Transport Research Economics (BITRE). 
-                The dataset encompasses road enforcement activities across all 8 Australian states and territories, spanning from 2008 to 2024.
-              </p>
-              <p className="text-grey-dark leading-relaxed">
-                A significant enhancement came with 2023 data: the inclusion of age group and geographic location breakdowns. 
-                These new dimensions allow for deeper analysis of enforcement patterns, revealing disparities across demographic and geographic segments.
-              </p>
-            </div>
-            <div className="bg-navy-light bg-opacity-60 rounded p-6">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-grey-dark">
-                    <th className="text-left pb-3 text-teal-light font-semibold">Dataset</th>
-                    <th className="text-left pb-3 text-teal-light font-semibold">Rows</th>
-                    <th className="text-left pb-3 text-teal-light font-semibold">Dimensions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {datasets.map((ds, idx) => (
-                    <tr key={idx} className="border-b border-grey-dark border-opacity-30">
-                      <td className="py-3 text-white text-xs">{ds.name}</td>
-                      <td className="py-3 text-teal text-xs font-semibold">{ds.rows}</td>
-                      <td className="py-3 text-grey-dark text-xs">{ds.dimensions}</td>
+              <div className="surface-panel overflow-hidden lg:col-span-2">
+                <table className="w-full border-collapse text-left text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-slate-50">
+                      <th className="px-3 py-2 text-navy">Dataset</th>
+                      <th className="px-3 py-2 text-navy">Rows</th>
+                      <th className="px-3 py-2 text-navy">Key dimensions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
-          {/* Tech Stack */}
-          <div className="flex flex-wrap gap-6 justify-center">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-teal"></div>
-              <span className="text-sm text-grey-dark">React</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-teal"></div>
-              <span className="text-sm text-grey-dark">D3.js</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-teal"></div>
-              <span className="text-sm text-grey-dark">Node.js</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section D: How We Used the Data */}
-      <section className="bg-navy text-white py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-teal mb-12 text-center">How We Processed the Data</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, idx) => (
-              <div key={idx} className="relative">
-                <div className="bg-navy-light bg-opacity-60 rounded p-8">
-                  <div className="w-12 h-12 rounded-full bg-teal text-navy flex items-center justify-center font-bold text-lg mb-6">
-                    {step.number}
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{step.title}</h3>
-                  <p className="text-grey-dark text-sm leading-relaxed">{step.description}</p>
-                </div>
-                {idx < steps.length - 1 && (
-                  <div className="hidden md:flex absolute -right-4 top-1/3 text-teal text-2xl font-bold">→</div>
-                )}
+                  </thead>
+                  <tbody>
+                    {datasets.map((dataset) => (
+                      <tr key={dataset.name} className="border-b border-border/60">
+                        <td className="px-3 py-2 text-navy">{dataset.name}</td>
+                        <td className="px-3 py-2 text-teal">{dataset.rows}</td>
+                        <td className="px-3 py-2 text-slate-600">{dataset.dimensions}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            ))}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-3">
+              {['React', 'D3.js', 'Node.js'].map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-full border border-border bg-white px-4 py-1 text-xs font-semibold uppercase tracking-wider text-teal"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section E: Navigate */}
-      <section className="bg-navy text-white py-16">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-white mb-12 text-center">Explore the Data</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {chapters.map((chapter, idx) => (
-              <Link
-                key={idx}
-                href={chapter.href}
-                className="block bg-navy-light bg-opacity-60 rounded overflow-hidden border-l-4 border-teal hover:shadow-lg transition"
-              >
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-4">{chapter.title}</h3>
-                  <p className="text-grey-dark text-sm leading-relaxed mb-6">{chapter.description}</p>
-                  <div className="inline-block bg-teal text-navy font-bold py-2 px-6 rounded hover:bg-teal-light transition">
-                    Explore
+        <section className="fade-in py-14">
+          <div className="content-wrap">
+            <h2 className="mb-7 text-center font-display text-3xl font-bold text-navy">How We Processed the Data</h2>
+            <div className="grid gap-4 md:grid-cols-3">
+              {steps.map((step) => (
+                <article key={step.step} className="relative surface-panel p-5">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-teal font-display text-lg font-bold text-white">
+                    {step.step}
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <h3 className="font-display text-xl font-bold text-navy">{step.title}</h3>
+                  <p className="mt-2 text-sm text-slate-600">{step.text}</p>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="bg-grey-dark text-white py-8">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="mb-2">Data Source: Bureau of Infrastructure and Transport Research Economics (BITRE)</p>
-          <p className="text-sm opacity-75">Road Safety Enforcement Dashboard © 2024</p>
-        </div>
-      </footer>
-    </main>
+        <section className="fade-in py-14">
+          <div className="content-wrap">
+            <h2 className="mb-8 text-center font-display text-3xl font-bold text-navy">Explore the Data</h2>
+            <div className="grid gap-5 md:grid-cols-3">
+              {navigationCards.map((card) => (
+                <Link key={card.href} href={card.href} className="surface-panel border-l-4 border-l-teal p-5 transition hover:-translate-y-1 hover:shadow-xl">
+                  <h3 className="font-display text-2xl font-bold text-navy">{card.title}</h3>
+                  <p className="mt-3 text-sm text-slate-600">{card.description}</p>
+                  <span className="mt-5 inline-flex items-center rounded-md bg-teal px-4 py-2 text-sm font-semibold text-white">
+                    Explore
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
   )
 }

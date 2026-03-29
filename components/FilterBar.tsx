@@ -1,134 +1,158 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+
+type FilterVariant = 'fines' | 'breath' | 'drugs'
 
 interface FilterBarProps {
-  onFilterChange?: (filters: FilterState) => void
+  variant: FilterVariant
 }
 
-export interface FilterState {
-  jurisdictions: string[]
-  yearRange: [number, number]
-  offenceTypes?: string[]
-  substances?: string[]
-}
+const ALL_STATES = ['ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA']
 
-export default function FilterBar({ onFilterChange }: FilterBarProps) {
-  const [jurisdictions, setJurisdictions] = useState<string[]>(['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'])
-  const [yearRange, setYearRange] = useState<[number, number]>([2008, 2024])
-  const [offenceTypes, setOffenceTypes] = useState<string[]>(['Speed', 'Mobile Phone', 'Seatbelt', 'Unlicensed'])
+export default function FilterBar({ variant }: FilterBarProps) {
+  const [jurisdiction, setJurisdiction] = useState('All states')
+  const [yearStart, setYearStart] = useState(2008)
+  const [yearEnd, setYearEnd] = useState(2024)
+  const [locationType, setLocationType] = useState('All locations')
+  const [offenceMode, setOffenceMode] = useState('All selected')
+  const [substance, setSubstance] = useState('All substances')
 
-  const handleReset = () => {
-    const defaultState = {
-      jurisdictions: ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT'],
-      yearRange: [2008, 2024] as [number, number],
-      offenceTypes: ['Speed', 'Mobile Phone', 'Seatbelt', 'Unlicensed'],
-    }
-    setJurisdictions(defaultState.jurisdictions)
-    setYearRange(defaultState.yearRange)
-    setOffenceTypes(defaultState.offenceTypes)
-    onFilterChange?.(defaultState)
+  const resetFilters = () => {
+    setJurisdiction('All states')
+    setYearStart(2008)
+    setYearEnd(2024)
+    setLocationType('All locations')
+    setOffenceMode('All selected')
+    setSubstance('All substances')
   }
 
-  const jurisdictionOptions = ['NSW', 'VIC', 'QLD', 'WA', 'SA', 'TAS', 'ACT', 'NT']
-  const offenceTypeOptions = ['Speed', 'Mobile Phone', 'Seatbelt', 'Unlicensed']
-
-  const hasActiveFilter = 
-    jurisdictions.length < 8 || 
-    yearRange[0] !== 2008 || 
-    yearRange[1] !== 2024 ||
-    offenceTypes.length < 4
+  const hasActiveFilters = useMemo(() => {
+    return (
+      jurisdiction !== 'All states' ||
+      yearStart !== 2008 ||
+      yearEnd !== 2024 ||
+      locationType !== 'All locations' ||
+      offenceMode !== 'All selected' ||
+      substance !== 'All substances'
+    )
+  }, [jurisdiction, yearStart, yearEnd, locationType, offenceMode, substance])
 
   return (
-    <div className="bg-navy-light bg-opacity-60 border-b border-navy py-4 px-6 sticky top-32 z-30">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-end gap-8">
-          {/* Jurisdiction Filter */}
-          <div>
-            <label className="text-xs font-bold text-grey-dark uppercase tracking-wide block mb-2">
-              Filter all charts
-            </label>
-            <div className="relative">
-              <select
-                value={jurisdictions[0] || ''}
-                onChange={(e) => {
-                  const selected = [e.target.value]
-                  setJurisdictions(selected)
-                  onFilterChange?.({ jurisdictions: selected, yearRange, offenceTypes })
-                }}
-                className="px-3 py-2 border border-grey-dark/30 rounded text-grey-dark text-sm bg-white w-32 appearance-none"
-              >
-                <option value="">All States</option>
-                {jurisdictionOptions.map(j => (
-                  <option key={j} value={j}>{j}</option>
-                ))}
-              </select>
-              {hasActiveFilter && <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-yellow-400"></div>}
-            </div>
-          </div>
-
-          {/* Year Range Filter */}
-          <div>
-            <label className="text-xs font-bold text-grey-dark uppercase tracking-wide block mb-2">
-              Year range
-            </label>
-            <div className="flex items-center gap-2">
-              <input
-                type="range"
-                min="2008"
-                max="2024"
-                value={yearRange[1]}
-                onChange={(e) => {
-                  const newRange: [number, number] = [yearRange[0], parseInt(e.target.value)]
-                  setYearRange(newRange)
-                  onFilterChange?.({ jurisdictions, yearRange: newRange, offenceTypes })
-                }}
-                className="w-40"
-              />
-              <span className="text-xs text-grey-dark whitespace-nowrap">{yearRange[0]}–{yearRange[1]}</span>
-            </div>
-          </div>
-
-          {/* Offence Type Filter */}
-          <div>
-            <label className="text-xs font-bold text-grey-dark uppercase tracking-wide block mb-2">
-              Offence type
-            </label>
-            <div className="flex gap-2">
-              {offenceTypeOptions.map(type => (
-                <button
-                  key={type}
-                  onClick={() => {
-                    const newTypes = offenceTypes.includes(type)
-                      ? offenceTypes.filter(t => t !== type)
-                      : [...offenceTypes, type]
-                    setOffenceTypes(newTypes)
-                    onFilterChange?.({ jurisdictions, yearRange, offenceTypes: newTypes })
-                  }}
-                  className={`px-3 py-1 rounded text-xs font-semibold transition relative ${
-                    offenceTypes.includes(type)
-                      ? 'bg-teal text-white'
-                      : 'bg-white text-grey-dark border border-grey-dark/30'
-                  }`}
-                >
-                  {type}
-                  {!offenceTypes.includes(type) && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-yellow-400"></div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Reset Button */}
-          <button
-            onClick={handleReset}
-            className="ml-auto text-xs font-bold text-teal-light hover:text-teal transition"
+    <section className="sticky top-40 z-30 border-y border-border bg-white/95 py-3 backdrop-blur-sm">
+      <div className="content-wrap flex flex-wrap items-end gap-4 lg:gap-7">
+        <FilterField label="Filter all charts" active={jurisdiction !== 'All states'}>
+          <select
+            className="rounded-md border border-border bg-white px-3 py-2 text-sm text-navy"
+            value={jurisdiction}
+            onChange={(event) => setJurisdiction(event.target.value)}
           >
-            Reset all filters
-          </button>
-        </div>
+            <option>All states</option>
+            {ALL_STATES.map((state) => (
+              <option key={state}>{state}</option>
+            ))}
+          </select>
+        </FilterField>
+
+        <FilterField label="Year range" active={yearStart !== 2008 || yearEnd !== 2024}>
+          <div className="flex items-center gap-2">
+            <input
+              aria-label="Year start"
+              type="number"
+              min={2008}
+              max={2024}
+              className="w-20 rounded-md border border-border bg-white px-2 py-2 text-sm text-navy"
+              value={yearStart}
+              onChange={(event) => setYearStart(Number(event.target.value))}
+            />
+            <span className="text-slate-500">to</span>
+            <input
+              aria-label="Year end"
+              type="number"
+              min={2008}
+              max={2024}
+              className="w-20 rounded-md border border-border bg-white px-2 py-2 text-sm text-navy"
+              value={yearEnd}
+              onChange={(event) => setYearEnd(Number(event.target.value))}
+            />
+          </div>
+        </FilterField>
+
+        {variant === 'fines' && (
+          <FilterField label="Offence type" active={offenceMode !== 'All selected'}>
+            <select
+              className="rounded-md border border-border bg-white px-3 py-2 text-sm text-navy"
+              value={offenceMode}
+              onChange={(event) => setOffenceMode(event.target.value)}
+            >
+              <option>All selected</option>
+              <option>Speed only</option>
+              <option>Mobile phone only</option>
+              <option>Seatbelt only</option>
+              <option>Unlicensed only</option>
+            </select>
+          </FilterField>
+        )}
+
+        {variant === 'breath' && (
+          <FilterField label="Location type" active={locationType !== 'All locations'}>
+            <select
+              className="rounded-md border border-border bg-white px-3 py-2 text-sm text-navy"
+              value={locationType}
+              onChange={(event) => setLocationType(event.target.value)}
+            >
+              <option>All locations</option>
+              <option>Major Cities</option>
+              <option>Inner Regional</option>
+              <option>Outer Regional</option>
+              <option>Remote</option>
+              <option>Very Remote</option>
+            </select>
+          </FilterField>
+        )}
+
+        {variant === 'drugs' && (
+          <FilterField label="Substance" active={substance !== 'All substances'}>
+            <select
+              className="rounded-md border border-border bg-white px-3 py-2 text-sm text-navy"
+              value={substance}
+              onChange={(event) => setSubstance(event.target.value)}
+            >
+              <option>All substances</option>
+              <option>Amphetamine</option>
+              <option>Cannabis</option>
+              <option>Cocaine</option>
+              <option>Ecstasy</option>
+              <option>Methylamphetamine</option>
+            </select>
+          </FilterField>
+        )}
+
+        <button
+          onClick={resetFilters}
+          className="ml-auto text-sm font-semibold text-teal transition hover:text-navy"
+        >
+          Reset all filters{hasActiveFilters ? ' •' : ''}
+        </button>
       </div>
+    </section>
+  )
+}
+
+interface FilterFieldProps {
+  label: string
+  active: boolean
+  children: React.ReactNode
+}
+
+function FilterField({ label, active, children }: FilterFieldProps) {
+  return (
+    <div className="relative min-w-[180px]">
+      <div className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+        <span>{label}</span>
+        {active && <span className="h-2 w-2 rounded-full bg-amber"></span>}
+      </div>
+      {children}
     </div>
   )
 }

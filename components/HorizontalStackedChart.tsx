@@ -8,6 +8,7 @@ interface HorizontalStackedChartProps {
 }
 
 export default function HorizontalStackedChart({ title, height = 280 }: HorizontalStackedChartProps) {
+  void title
   const svgRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {

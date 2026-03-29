@@ -1,13 +1,20 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { Manrope } from 'next/font/google'
 import './globals.css'
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  variable: '--font-manrope',
+})
 
 export const metadata: Metadata = {
   title: 'Public Enforcement Dashboard',
   description: 'Explore Australian road enforcement trends through data-driven insights',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -17,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-white text-navy">
+      <body className={`${manrope.variable} app-shell`}>
         {children}
       </body>
     </html>

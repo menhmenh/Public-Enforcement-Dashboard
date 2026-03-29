@@ -1,14 +1,14 @@
 export default function Footer() {
   return (
-    <footer className="bg-navy text-white mt-16 py-8 border-t border-navy-light">
-      <div className="max-w-6xl mx-auto px-6 flex items-center justify-between text-sm">
-        <p className="text-grey-dark">
+    <footer className="mt-10 border-t border-border bg-white py-6">
+      <div className="content-wrap grid gap-2 text-sm md:grid-cols-3 md:items-center">
+        <p className="text-slate-600 md:text-left">
           Data source: BITRE — Bureau of Infrastructure and Transport Research Economics
         </p>
-        <p className="text-grey-dark text-center flex-1">
+        <p className="text-slate-600 md:text-center">
           Coverage: 2008–2024 · All Australian states & territories
         </p>
-        <p className="text-grey-dark text-right">
+        <p className="text-slate-600 md:text-right">
           COS30045 Data Visualisation · Swinburne University
         </p>
       </div>
